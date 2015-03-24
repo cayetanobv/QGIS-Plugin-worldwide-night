@@ -216,36 +216,42 @@ class worldwidenight:
         
         """
         
-        self.dlg.progressBar.setValue(0)
+        try:
+            self.dlg.progressBar.setValue(0)
+            
+            # input_date = None is for UTC now date
+            # For others input date: datetime object must be passed
+            #       datetime(year, month, day, hour, minute)
+            
+            datetime_qt = self.dlg.getDateTime() 
+            datetime_py = datetime_qt.toPyDateTime()
+            
+            self.dlg.progressBar.setValue(10)
+            
+            # Output GeoJSON filename
+            date_fmt = '%Y%m%d_%H%M%S'
+            filename = "day_night_%s.geojson" % (datetime_py.strftime(date_fmt))
+            
+            # Set output filepath
+            filepath = os.path.join(dest_folder, filename)
+            
+            dn = DayNight2Geojson(filepath, input_date=datetime_py)
+            dn.getDayNight()
+            
+            self.dlg.progressBar.setValue(100)
+            
+            new_geojson = QgsVectorLayer(filepath, "worldwide_night", "ogr")
+            
+            if not new_geojson.isValid():
+                self.iface.messageBar().pushMessage("Error", "Layer failed to load!", level=QgsMessageBar.CRITICAL)
+            else:
+                QgsMapLayerRegistry.instance().addMapLayer(new_geojson)
+                self.iface.messageBar().pushMessage("Info", "Layer sucessfully created!", level=QgsMessageBar.INFO)
         
-        # input_date = None is for UTC now date
-        # For others input date: datetime object must be passed
-        #       datetime(year, month, day, hour, minute)
-        
-        datetime_qt = self.dlg.getDateTime() 
-        datetime_py = datetime_qt.toPyDateTime()
-        
-        self.dlg.progressBar.setValue(10)
-        
-        # Output GeoJSON filename
-        date_fmt = '%Y%m%d_%H%M%S'
-        filename = "day_night_%s.geojson" % (datetime_py.strftime(date_fmt))
-        
-        # Set output filepath
-        filepath = os.path.join(dest_folder, filename)
-        
-        dn = DayNight2Geojson(filepath, input_date=datetime_py)
-        dn.getDayNight()
-        
-        self.dlg.progressBar.setValue(100)
-        
-        new_geojson = QgsVectorLayer(filepath, "worldwide_night", "ogr")
-        
-        if not new_geojson.isValid():
-            self.iface.messageBar().pushMessage("Error", "Layer failed to load!", level=QgsMessageBar.CRITICAL)
-        else:
-            QgsMapLayerRegistry.instance().addMapLayer(new_geojson)
-            self.iface.messageBar().pushMessage("Info", "Layer sucessfully created!", level=QgsMessageBar.INFO)
+        except Exception as e:
+            result = 'Error: %s - %s' % (e.message, e.args)
+            self.iface.messageBar().pushMessage("Error", result, level=QgsMessageBar.CRITICAL)
+            self.dlg.progressBar.setValue(0)
     
     
     def setDestFolder(self):
