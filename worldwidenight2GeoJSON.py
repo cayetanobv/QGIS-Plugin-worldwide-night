@@ -274,7 +274,7 @@ class worldwidenight:
         
         QMessageBox.information(self.iface.mainWindow(),"Help", 
             """
-            1) Seelect a valid date to compute (UTC). 
+            1) Select a valid date to compute (UTC). 
             
             2) Select destination folder to 
             save output layer (GeoJSON).
