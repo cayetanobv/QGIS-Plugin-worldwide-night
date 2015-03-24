@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/plugins/worldwidenight" >
+        <file>icon.png</file>
+    </qresource>
+</RCC>
