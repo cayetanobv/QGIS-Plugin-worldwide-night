@@ -238,15 +238,21 @@ class worldwidenight:
             dn = DayNight2Geojson(filepath, input_date=datetime_py)
             dn.getDayNight()
             
+            check_addlayer = self.dlg.getCheckBoxState()
+            
+            if check_addlayer:
+                new_geojson = QgsVectorLayer(filepath, "worldwide_night", "ogr")
+                
+                if not new_geojson.isValid():
+                    self.iface.messageBar().pushMessage("Error", "Layer failed to load!", 
+                                                            level=QgsMessageBar.CRITICAL)
+                else:
+                    QgsMapLayerRegistry.instance().addMapLayer(new_geojson)
+            
             self.dlg.progressBar.setValue(100)
             
-            new_geojson = QgsVectorLayer(filepath, "worldwide_night", "ogr")
-            
-            if not new_geojson.isValid():
-                self.iface.messageBar().pushMessage("Error", "Layer failed to load!", level=QgsMessageBar.CRITICAL)
-            else:
-                QgsMapLayerRegistry.instance().addMapLayer(new_geojson)
-                self.iface.messageBar().pushMessage("Info", "Layer sucessfully created!", level=QgsMessageBar.INFO)
+            self.iface.messageBar().pushMessage("Info", "Layer sucessfully created!", 
+                                                            level=QgsMessageBar.INFO)
         
         except Exception as e:
             result = 'Error: %s - %s' % (e.message, e.args)

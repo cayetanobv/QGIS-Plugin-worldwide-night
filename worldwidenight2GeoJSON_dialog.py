@@ -49,4 +49,7 @@ class worldwidenightDialog(QtGui.QDialog, FORM_CLASS):
     
     def getOutputPath(self):
         return self.labelOutputPath.text()
+    
+    def getCheckBoxState(self):
+        return self.addLayerCheckBox.isChecked()
 
