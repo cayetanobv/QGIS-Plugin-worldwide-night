@@ -27,6 +27,7 @@ See requirements of above libraries (Numpy, Matplotlib, GEOS, etc.).
 
 ##About author
 Developed by Cayetano Benavent
+
 GIS Analyst at Geographica.
 
 http://www.geographica.gs

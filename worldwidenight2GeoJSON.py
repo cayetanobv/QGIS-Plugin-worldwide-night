@@ -2,11 +2,10 @@
 """
 /***************************************************************************
  worldwidenight
-                                 A QGIS plugin
+
  This Plugin get worldwide night geometry and dumps to a GeoJSON file.
                               -------------------
         begin                : 2015-03-21
-        git sha              : $Format:%H$
         copyright            : (C) 2015 by Cayetano Benavent
         email                : cayetano.benavent@geographica.gs
  ***************************************************************************/
@@ -20,22 +19,35 @@
  *                                                                         *
  ***************************************************************************/
 """
+
 # Import the PyQt and QGIS libraries
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from qgis.gui import *
 from qgis.core import *
 
+# Python SL imports
+import os.path
+import imp
+from datetime import datetime
+
 # Initialize Qt resources from file resources.py
 import resources_rc
 
 # Import the code for the dialog
 from worldwidenight2GeoJSON_dialog import worldwidenightDialog
-import os.path
 
-# Other imports
-from datetime import datetime
-from daynight2geojson.lib.daynight2geojson import DayNight2Geojson
+ErrorWWN2Gjson = None
+
+try:
+    imp.find_module('matplotlib')
+    imp.find_module('geojson')
+    imp.find_module('shapely')
+    # Import daynight2geojson library
+    from daynight2geojson.lib.daynight2geojson import DayNight2Geojson
+
+except ImportError, err:
+    ErrorWWN2Gjson = err
 
 
 class worldwidenight:
@@ -201,7 +213,7 @@ class worldwidenight:
         
     def runComputeWorldWideNight(self):
         """
-        It does main work...
+        Run computations...
         
         """
         
@@ -215,6 +227,10 @@ class worldwidenight:
         Compute worldwide night
         
         """
+        
+        if ErrorWWN2Gjson:
+            QMessageBox.warning(self.iface.mainWindow(),"Module not found", str(ErrorWWN2Gjson))
+            return
         
         try:
             self.dlg.progressBar.setValue(0)
@@ -234,6 +250,11 @@ class worldwidenight:
             
             # Set output filepath
             filepath = os.path.join(dest_folder, filename)
+            
+            if not os.path.exists(dest_folder):
+                QMessageBox.information(self.iface.mainWindow(),"Warning", "Set a valid folder path.")
+                self.dlg.progressBar.setValue(0)
+                return
             
             dn = DayNight2Geojson(filepath, input_date=datetime_py)
             dn.getDayNight()
@@ -255,7 +276,7 @@ class worldwidenight:
                                                             level=QgsMessageBar.INFO)
         
         except Exception as e:
-            result = 'Error: %s - %s' % (e.message, e.args)
+            result = '%s - %s' % (e.message, e.args)
             self.iface.messageBar().pushMessage("Error", result, level=QgsMessageBar.CRITICAL)
             self.dlg.progressBar.setValue(0)
     
