@@ -41,10 +41,8 @@ ErrorWWN2Gjson = None
 
 try:
     imp.find_module('matplotlib')
-    imp.find_module('geojson')
-    imp.find_module('shapely')
     # Import daynight2geojson library
-    from daynight2geojson.lib.daynight2geojson import DayNight2Geojson
+    from .daynight2geojson import DayNight2Geojson
 
 except ImportError, err:
     ErrorWWN2Gjson = err
@@ -246,7 +244,7 @@ class worldwidenight:
             
             # Output GeoJSON filename
             date_fmt = '%Y%m%d_%H%M%S'
-            filename = "day_night_%s.geojson" % (datetime_py.strftime(date_fmt))
+            filename = "day_night_%s.shp" % (datetime_py.strftime(date_fmt))
             
             # Set output filepath
             filepath = os.path.join(dest_folder, filename)

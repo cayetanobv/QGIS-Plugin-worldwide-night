@@ -105,7 +105,7 @@ class DayNight2Geojson(object):
                     
                     pl_ly.updateExtents()
                 
-                    error = QgsVectorFileWriter.writeAsVectorFormat(pl_ly, "/tmp/wwngt.shp", "wwnt", None, "ESRI Shapefile")
+                    error = QgsVectorFileWriter.writeAsVectorFormat(pl_ly, self.filepath, "wwnt", None, "ESRI Shapefile")
             
                     if error == QgsVectorFileWriter.NoError:
                         print "Polygon created!"
