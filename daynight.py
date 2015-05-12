@@ -18,7 +18,6 @@
 #  MA 02110-1301, USA.
 # 
 
-from qgis.core import *
 
 # To avoid errors if you run module without X11
 import matplotlib
@@ -26,6 +25,9 @@ matplotlib.use('Agg')
 
 from mpl_toolkits.basemap import Basemap
 from datetime import datetime
+
+from qgis.core import *
+
 
 
 class DayNight(object):
@@ -93,10 +95,10 @@ class DayNight(object):
                 lat = vert[:,1]
                 
                 if len(lon) > 2:
-                    self.__buildGeom(lon, lat)
+                    self.__buildGeom(lon, lat, map_date)
     
     
-    def __buildGeom(self, lon, lat):
+    def __buildGeom(self, lon, lat, map_date):
         """
         Build shapefile geometry
         
@@ -104,20 +106,19 @@ class DayNight(object):
         
         qgs_pt = [QgsPoint(coord[0], coord[1]) for coord in zip(lon,lat)]
                     
-        pl_ly = QgsVectorLayer("Polygon", "temporary_points", "memory")
+        pl_ly = QgsVectorLayer("Polygon", "tmp_layer", "memory")
         prov = pl_ly.dataProvider() 
         
         feat = QgsFeature() 
-        
         feat.setGeometry(QgsGeometry.fromPolygon([qgs_pt]))
         prov.addFeatures([feat])
         
         pl_ly.updateExtents()
-    
+        
         error = QgsVectorFileWriter.writeAsVectorFormat(pl_ly, self.filepath, "worldwidenight", None, "ESRI Shapefile")
         
         if error == QgsVectorFileWriter.NoError:
-            print "Worldwide night polygon geometry created!"
+            return 0
 
         
         

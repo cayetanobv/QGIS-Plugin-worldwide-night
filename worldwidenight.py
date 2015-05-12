@@ -244,7 +244,8 @@ class worldwidenight:
             
             # Output shp filename
             date_fmt = '%Y%m%d_%H%M%S'
-            filename = "day_night_%s.shp" % (datetime_py.strftime(date_fmt))
+            name = "worldwide_night_%s" % (datetime_py.strftime(date_fmt))
+            filename = "%s.shp" % (name)
             
             # Set output filepath
             filepath = os.path.join(dest_folder, filename)
@@ -260,7 +261,7 @@ class worldwidenight:
             check_addlayer = self.dlg.getCheckBoxState()
             
             if check_addlayer:
-                new_lyr = QgsVectorLayer(filepath, "worldwide_night", "ogr")
+                new_lyr = QgsVectorLayer(filepath, name, "ogr")
                 
                 if not new_lyr.isValid():
                     self.iface.messageBar().pushMessage("Error", "Layer failed to load!", 
@@ -270,8 +271,8 @@ class worldwidenight:
             
             self.dlg.progressBar.setValue(100)
             
-            self.iface.messageBar().pushMessage("Info", "Layer sucessfully created!", 
-                                                            level=QgsMessageBar.INFO)
+            self.iface.messageBar().pushMessage("Info", "Layer sucessfully created: %s" % (filename), 
+                                                level=QgsMessageBar.INFO, duration=8)
         
         except Exception as e:
             result = '%s - %s' % (e.message, e.args)
