@@ -3,7 +3,7 @@
 /***************************************************************************
  worldwidenight
                                  A QGIS plugin
- This Plugin get worldwide night geometry and dumps to a GeoJSON file.
+ This Plugin get worldwide night geometry and export to a shapefile.
                              -------------------
         begin                : 2015-03-21
         copyright            : (C) 2015 by Cayetano Benavent
@@ -31,5 +31,5 @@ def classFactory(iface):  # pylint: disable=invalid-name
     :type iface: QgsInterface
     """
     #
-    from .worldwidenight2GeoJSON import worldwidenight
+    from .worldwidenight import worldwidenight
     return worldwidenight(iface)

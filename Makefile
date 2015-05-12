@@ -1,7 +1,7 @@
 #/***************************************************************************
 # worldwidenight
 #
-# This Plugin get worldwide night geometry and dumps to a GeoJSON file.
+# This Plugin get worldwide night geometry and dumps to a SHP file.
 #							 -------------------
 #		begin				: 2015-03-21
 #		git sha				: $Format:%H$
@@ -38,17 +38,17 @@ LOCALES =
 # translation
 SOURCES = \
 	__init__.py \
-	worldwidenight2GeoJSON.py \
-	worldwidenight2GeoJSON_dialog.py
+	worldwidenight.py \
+	worldwidenight_dialog.py
 
 PLUGINNAME = worldwidenight
 
 PY_FILES = \
-	worldwidenight2GeoJSON.py \
-	worldwidenight2GeoJSON_dialog.py \
+	worldwidenight.py \
+	worldwidenight_dialog.py \
 	__init__.py
 
-UI_FILES = worldwidenight2GeoJSON_dialog_base.ui
+UI_FILES = worldwidenight_dialog_base.ui
 
 EXTRAS = icon.png metadata.txt
 

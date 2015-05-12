@@ -7,9 +7,9 @@
 # This file should be included when you package your plugin.# Mandatory items:
 
 [general]
-name=Worldwide night to GeoJSON
+name=Worldwide night
 qgisMinimumVersion=2.0
-description=This Plugin get worldwide night geometry and dumps to a GeoJSON file.
+description=This Plugin get worldwide night geometry and export to a shapefile.
 version=0.1
 author=Cayetano Benavent
 email=cayetano.benavent@geographica.gs

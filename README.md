@@ -1,28 +1,13 @@
-#Worldwide night to GeoJSON
+#Worldwide night
 
 ##Description
 TODO
 
 ##Requirements
-QGIS 2.0 or later.
-
-This project uses daynight2geojson library to do the work:
-
-https://github.com/GeographicaGS/daynight2geojson
-
-You must add daynight2geojson library as a Git submodule:
-
-```
-$ git submodule add https://github.com/GeographicaGS/daynight2geojson.git
-```
-
-daynight2geojson library requirements:
-
-- Geojson Python library (>= 1.0.9). https://github.com/frewsxcv/python-geojson
-- Shapely Python library (>= 1.4). https://github.com/Toblerity/Shapely
+- QGIS 2.0 or later.
 - Matplotlib Basemap Toolkit Python library (>= 1.0.7). https://github.com/matplotlib/basemap
 
-See requirements of above libraries (Numpy, Matplotlib, GEOS, etc.).
+See requirements of above libraries (Numpy, Matplotlib, etc.).
 
 
 ##About author

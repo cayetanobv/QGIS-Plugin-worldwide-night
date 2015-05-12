@@ -28,7 +28,7 @@ from mpl_toolkits.basemap import Basemap
 from datetime import datetime
 
 
-class DayNight2Geojson(object):
+class DayNight(object):
     """
     Get day and night geometry and dumps 
     to a SHP file
@@ -66,18 +66,18 @@ class DayNight2Geojson(object):
             date = self.input_date
             map_date = date.strftime("%d %b %Y %H:%M:%S")
         
-        map = Basemap(projection='cyl',lon_0=0, ellps='WGS84', resolution=None)
+        mp = Basemap(projection='cyl',lon_0=0, ellps='WGS84', resolution=None)
 
-        contour_set = map.nightshade(date)
+        contour_set = mp.nightshade(date)
         
-        self.__buildSHP(contour_set, map_date)
+        self.__getGeom(contour_set, map_date)
         
-        print 'Day/Night Map for %s (UTC)' % (map_date)
+        return 'Day/Night Map for %s (UTC)' % (map_date)
 
     
-    def __buildSHP(self, contour_set, map_date):
+    def __getGeom(self, contour_set, map_date):
         """
-        Build SHP with a input geometry
+        Get shapefile with an input geometry
         
         """
         
@@ -86,29 +86,38 @@ class DayNight2Geojson(object):
         for cs_coll in range(n_coll):
             if len(contour_set.collections[cs_coll].get_paths()) > 0:
                 cs_paths = contour_set.collections[cs_coll].get_paths()[0]
+                
                 vert = cs_paths.vertices
+                
                 lon = vert[:,0]
                 lat = vert[:,1]
                 
                 if len(lon) > 2:
-                    qgs_pt = [QgsPoint(coord[0], coord[1]) for coord in zip(lon,lat)]
-                    
-                    pl_ly = QgsVectorLayer("Polygon", "temporary_points", "memory")
+                    self.__buildGeom(lon, lat)
+    
+    
+    def __buildGeom(self, lon, lat):
+        """
+        Build shapefile geometry
         
-                    prov = pl_ly.dataProvider() 
+        """
+        
+        qgs_pt = [QgsPoint(coord[0], coord[1]) for coord in zip(lon,lat)]
                     
-                    feat = QgsFeature() 
-                    
-                    feat.setGeometry(QgsGeometry.fromPolygon([qgs_pt]))
-                    
-                    prov.addFeatures([feat])
-                    
-                    pl_ly.updateExtents()
-                
-                    error = QgsVectorFileWriter.writeAsVectorFormat(pl_ly, self.filepath, "wwnt", None, "ESRI Shapefile")
-            
-                    if error == QgsVectorFileWriter.NoError:
-                        print "Polygon created!"
+        pl_ly = QgsVectorLayer("Polygon", "temporary_points", "memory")
+        prov = pl_ly.dataProvider() 
+        
+        feat = QgsFeature() 
+        
+        feat.setGeometry(QgsGeometry.fromPolygon([qgs_pt]))
+        prov.addFeatures([feat])
+        
+        pl_ly.updateExtents()
+    
+        error = QgsVectorFileWriter.writeAsVectorFormat(pl_ly, self.filepath, "worldwidenight", None, "ESRI Shapefile")
+        
+        if error == QgsVectorFileWriter.NoError:
+            print "Worldwide night polygon geometry created!"
 
         
         
