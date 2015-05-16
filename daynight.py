@@ -18,15 +18,15 @@
 #  MA 02110-1301, USA.
 # 
 
+from datetime import datetime
+
+from qgis.core import *
 
 # To avoid errors if you run module without X11
 import matplotlib
 matplotlib.use('Agg')
 
 from mpl_toolkits.basemap import Basemap
-from datetime import datetime
-
-from qgis.core import *
 
 
 
@@ -74,7 +74,7 @@ class DayNight(object):
         
         self.__getGeom(contour_set, map_date)
         
-        return 'Day/Night Map for %s (UTC)' % (map_date)
+        return 'Day/Night Map for {} (UTC)'.format(map_date)
 
     
     def __getGeom(self, contour_set, map_date):
@@ -115,7 +115,9 @@ class DayNight(object):
         
         pl_ly.updateExtents()
         
-        error = QgsVectorFileWriter.writeAsVectorFormat(pl_ly, self.filepath, "worldwidenight", None, "ESRI Shapefile")
+        lyrname= "worldwidenight_{}".format(map_date)
+        
+        error = QgsVectorFileWriter.writeAsVectorFormat(pl_ly, self.filepath, lyrname, None, "ESRI Shapefile")
         
         if error == QgsVectorFileWriter.NoError:
             return 0

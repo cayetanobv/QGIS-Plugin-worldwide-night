@@ -41,6 +41,7 @@ ErrorWWNight = None
 
 try:
     imp.find_module('matplotlib')
+    
     # Import daynight module
     from .daynight import DayNight
 
@@ -227,7 +228,8 @@ class worldwidenight:
         """
         
         if ErrorWWNight:
-            QMessageBox.warning(self.iface.mainWindow(),"Module not found", str(ErrorWWNight))
+            errmsg = "{}.\nSee Help for requirements.".format(str(ErrorWWNight))
+            QMessageBox.warning(self.iface.mainWindow(),"Module not found", errmsg)
             return
         
         try:
@@ -244,8 +246,8 @@ class worldwidenight:
             
             # Output shp filename
             date_fmt = '%Y%m%d_%H%M%S'
-            name = "worldwide_night_%s" % (datetime_py.strftime(date_fmt))
-            filename = "%s.shp" % (name)
+            name = "worldwide_night_{}".format(datetime_py.strftime(date_fmt))
+            filename = "{}.shp".format(name)
             
             # Set output filepath
             filepath = os.path.join(dest_folder, filename)
@@ -275,7 +277,7 @@ class worldwidenight:
                                                 level=QgsMessageBar.INFO, duration=8)
         
         except Exception as e:
-            result = '%s - %s' % (e.message, e.args)
+            result = '{0} - {1}'.format(e.message, e.args)
             self.iface.messageBar().pushMessage("Error", result, level=QgsMessageBar.CRITICAL)
             self.dlg.progressBar.setValue(0)
     
@@ -312,6 +314,11 @@ class worldwidenight:
             save output layer (shp).
             
             3) Push button "Compute worldwide night!".
+            
+            Requirements:
+              - Matplotlib Basemap Toolkit Python library:
+                 https://github.com/matplotlib/basemap
+                 http://matplotlib.org/basemap
             
             Developed by Cayetano Benavent 2015.
             
