@@ -3,8 +3,6 @@
 ## Description
  This Plugin computes worldwide night geometry and export to shapefile.
 
-TODO
-
 ## Requirements
 - QGIS 2.0 or later.
 - Matplotlib Basemap Toolkit Python library (>= 1.0.7). https://github.com/matplotlib/basemap
