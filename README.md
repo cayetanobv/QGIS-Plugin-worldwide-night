@@ -38,3 +38,6 @@ MA 02110-1301, USA.
 ## Credits
 Icon from:
 http://icons8.com
+
+Icon License: Creative Commons Attribution-NoDerivs 3.0 Unported
+https://creativecommons.org/licenses/by-nd/3.0/
