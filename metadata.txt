@@ -10,6 +10,7 @@
 name=Worldwide night
 qgisMinimumVersion=2.0
 description=This plugin computes worldwide geometry for a given date. The output is exported to a SHP file (Coordinate Reference system = EPSG:4326).
+about=This plugin computes worldwide geometry for a given date. The output is exported to a SHP file (Coordinate Reference system = EPSG:4326). cayetano.benavent@geographica.gs
 version=0.1
 author=Cayetano Benavent
 email=cayetano.benavent@geographica.gs
