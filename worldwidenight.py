@@ -41,7 +41,7 @@ ErrorWWNight = None
 
 try:
     imp.find_module('matplotlib')
-    
+
     # Import daynight module
     from .daynight import DayNight
 
@@ -186,8 +186,8 @@ class worldwidenight:
             text=self.tr(u'Worldwide night to SHP'),
             callback=self.run,
             parent=self.iface.mainWindow())
-        
-        
+
+
         # Connecting actions and functions (signals and slots)
         QObject.connect(self.dlg.outputButton, SIGNAL("clicked()"), self.setDestFolder)
         QObject.connect(self.dlg.computeButton, SIGNAL("clicked()"), self.runComputeWorldWideNight)
@@ -208,119 +208,155 @@ class worldwidenight:
     def run(self):
         # show the dialog
         self.dlg.show()
-        
-        
+
+
+    def checkOTF(self):
+        """
+        Check if OTF CRS Transformation is enabled
+        """
+        if not self.iface.mapCanvas().mapRenderer().hasCrsTransformEnabled():
+            self.iface.mapCanvas().setCrsTransformEnabled(True)
+            otfmsg = "OTF CRS Transformation enabled to properly add new layer (with EPSG:4326)"
+            self.iface.messageBar().pushMessage("Info", otfmsg, level=QgsMessageBar.INFO)
+
+
+    def forcingCRS(self, crs_forced):
+        """
+        Forcing to use CRS EPSG:4326 to create new layer
+        """
+        self.oldcrs = self.iface.mapCanvas().mapRenderer().destinationCrs()
+        self.iface.mapCanvas().mapRenderer().setDestinationCrs(crs_forced)
+        self.stgs = QSettings()
+        self.oldstgns = self.stgs.value("/Projections/defaultBehaviour")
+        self.stgs.setValue("/Projections/defaultBehaviour", "useProject")
+
+
+    def crsOldSettings(self):
+        """
+        Enable old settings again
+        """
+        self.iface.mapCanvas().mapRenderer().setDestinationCrs(self.oldcrs)
+        self.stgs.setValue("/Projections/defaultBehaviour", self.oldstgns)
+
+
     def runComputeWorldWideNight(self):
         """
         Run computations...
-        
         """
-        
+
         dest_folder = self.dlg.getOutputPath()
-        
+
         self.computeWorldWideNight(dest_folder)
-    
-    
+
+
     def computeWorldWideNight(self, dest_folder):
         """
         Compute worldwide night
-        
         """
-        
+
         if ErrorWWNight:
             errmsg = "{}.\nSee Help for requirements.".format(str(ErrorWWNight))
             QMessageBox.warning(self.iface.mainWindow(),"Module not found", errmsg)
             return
-        
+
         try:
             self.dlg.progressBar.setValue(0)
-            
+
+            lys_crs = QgsCoordinateReferenceSystem(4326, QgsCoordinateReferenceSystem.EpsgCrsId)
+
+            self.forcingCRS(lys_crs)
+
             # input_date = None is for UTC now date
             # For others input date: datetime object must be passed
             #       datetime(year, month, day, hour, minute)
-            
-            datetime_qt = self.dlg.getDateTime() 
+
+            datetime_qt = self.dlg.getDateTime()
             datetime_py = datetime_qt.toPyDateTime()
-            
+
             self.dlg.progressBar.setValue(10)
-            
+
             # Output shp filename
             date_fmt = '%Y%m%d_%H%M%S'
             name = "worldwide_night_{}".format(datetime_py.strftime(date_fmt))
             filename = "{}.shp".format(name)
-            
+
             # Set output filepath
             filepath = os.path.join(dest_folder, filename)
-            
+
             if not os.path.exists(dest_folder):
                 QMessageBox.information(self.iface.mainWindow(),"Warning", "Set a valid folder path.")
                 self.dlg.progressBar.setValue(0)
                 return
-            
+
             dn = DayNight(filepath, input_date=datetime_py)
             dn.getDayNight()
-            
+
+            self.crsOldSettings()
+
             check_addlayer = self.dlg.getCheckBoxState()
-            
+
             if check_addlayer:
+                self.checkOTF()
                 new_lyr = QgsVectorLayer(filepath, name, "ogr")
-                
+                new_lyr.setCrs(lys_crs)
+
                 if not new_lyr.isValid():
-                    self.iface.messageBar().pushMessage("Error", "Layer failed to load!", 
+                    self.iface.messageBar().pushMessage("Error", "Layer failed to load!",
                                                             level=QgsMessageBar.CRITICAL)
                 else:
                     QgsMapLayerRegistry.instance().addMapLayer(new_lyr)
-            
+
             self.dlg.progressBar.setValue(100)
-            
-            self.iface.messageBar().pushMessage("Info", "Layer sucessfully created: %s" % (filename), 
-                                                level=QgsMessageBar.INFO, duration=8)
-        
+
+            self.iface.messageBar().pushMessage("Info", "Layer sucessfully created: %s" % (filename),
+                                                level=QgsMessageBar.INFO, duration=10)
+
         except Exception as e:
             result = '{0} - {1}'.format(e.message, e.args)
             self.iface.messageBar().pushMessage("Error", result, level=QgsMessageBar.CRITICAL)
             self.dlg.progressBar.setValue(0)
-    
-    
+
+
     def setDestFolder(self):
         """
         Set Destination folder to save shp layer
         """
-        
+
         self.dlg.progressBar.setValue(0)
-        
+
         # open file dialog to select folder
         start_dir = '/home'
-        folder_path = QFileDialog.getExistingDirectory(self.iface.mainWindow(), 
-                                                     'Select destination folder to save shp layer', 
+        folder_path = QFileDialog.getExistingDirectory(self.iface.mainWindow(),
+                                                     'Select destination folder to save shp layer',
                                                      start_dir)
-        
+
         if folder_path:
             self.dlg.setLabelPathOutputFolder(folder_path)
         else:
             self.dlg.setLabelPathOutputFolder("Destination folder...")
-    
-    
+
+
     def getHelp(self):
         """
         Show help to users
         """
-        
-        QMessageBox.information(self.iface.mainWindow(),"Help", 
+
+        QMessageBox.information(self.iface.mainWindow(),"Help",
             """
-            1) Select a valid date to compute (UTC). 
-            
-            2) Select destination folder to 
-            save output layer (shp).
-            
+            1) Select a valid date to compute (UTC).
+
+            2) Select destination folder to
+            save output layer (shp)*.
+
             3) Push button "Compute worldwide night!".
-            
+
+            *Output CRS is EPSG:4326.
+
             Requirements:
               - Matplotlib Basemap Toolkit Python library:
                  https://github.com/matplotlib/basemap
                  http://matplotlib.org/basemap
-            
+
             Developed by Cayetano Benavent 2015.
-            
+
             """)
-    
