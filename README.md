@@ -1,7 +1,12 @@
 #Worldwide night
 
 ## Description
- This Plugin computes worldwide night geometry and export to shapefile.
+This plugin computes worldwide geometry for a given date.
+The output is exported to a SHP file (Coordinate Reference system = EPSG:4326).
+
+A related project is:
+- https://github.com/GeographicaGS/daynight2geojson
+- https://pypi.python.org/pypi/daynight2geojson
 
 ## Requirements
 - QGIS 2.0 or later.
