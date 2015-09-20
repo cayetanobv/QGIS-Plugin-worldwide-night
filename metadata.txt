@@ -10,9 +10,7 @@
 name=Worldwide night
 qgisMinimumVersion=2.0
 description=This plugin computes worldwide geometry for a given date. The output is exported to a SHP file (Coordinate Reference system = EPSG:4326).Requirements: Matplotlib Basemap Toolkit Python library (>= 1.0.7). https://github.com/matplotlib/basemap
-about=This plugin computes worldwide geometry for a given date. The output is exported to a SHP file (Coordinate Reference system = EPSG:4326).
-Requirements: Matplotlib Basemap Toolkit Python library (>= 1.0.7). https://github.com/matplotlib/basemap 
-cayetano.benavent@geographica.gs
+about=This plugin computes worldwide geometry for a given date. The output is exported to a SHP file (Coordinate Reference system = EPSG:4326). Requirements: Matplotlib Basemap Toolkit Python library (>= 1.0.7). https://github.com/matplotlib/basemap
 version=0.1
 author=Cayetano Benavent
 email=cayetano.benavent@geographica.gs
@@ -22,8 +20,7 @@ email=cayetano.benavent@geographica.gs
 # Recommended items:
 
 # Uncomment the following line and add your changelog:
-# changelog=
-0.1 First version
+changelog=0.1 First version
 
 # Tags are comma separated with spaces allowed
 tags= night, sunrise, sunset, worldwide
