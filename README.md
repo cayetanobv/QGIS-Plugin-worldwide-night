@@ -1,8 +1,12 @@
 #Worldwide night
 
 ## Description
-This plugin computes worldwide geometry for a given date.
+This plugin computes worldwide night geometry for a given date.
 The output is exported to a SHP file (Coordinate Reference system = EPSG:4326).
+
+You can find the plugin in QGIS Plugin Repository:
+
+https://plugins.qgis.org/plugins/worldwidenight/
 
 A related project is:
 - https://github.com/GeographicaGS/daynight2geojson
