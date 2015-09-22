@@ -192,6 +192,7 @@ class worldwidenight:
         QObject.connect(self.dlg.outputButton, SIGNAL("clicked()"), self.setDestFolder)
         QObject.connect(self.dlg.computeButton, SIGNAL("clicked()"), self.runComputeWorldWideNight)
         QObject.connect(self.dlg.helpButton, SIGNAL("clicked()"), self.getHelp)
+        QObject.connect(self.dlg.closeButton, SIGNAL("clicked()"), self.closeWdw)
 
 
     def unload(self):
@@ -334,6 +335,13 @@ class worldwidenight:
             self.dlg.setLabelPathOutputFolder(folder_path)
         else:
             self.dlg.setLabelPathOutputFolder("Destination folder...")
+
+
+    def closeWdw(self):
+        """
+        Close dialog window
+        """
+        self.dlg.close()
 
 
     def getHelp(self):
