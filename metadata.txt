@@ -29,7 +29,7 @@ tags= night, sunrise, sunset, worldwide
 homepage=https://github.com/cayetanobv/QGIS-Plugin-worldwide-night
 tracker=https://github.com/cayetanobv/QGIS-Plugin-worldwide-night/issues
 repository=https://github.com/cayetanobv/QGIS-Plugin-worldwide-night
-category=Plugins
+category=Vector
 icon=icon.png
 # experimental flag
 experimental=False
